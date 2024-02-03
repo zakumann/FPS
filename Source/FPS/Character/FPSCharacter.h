@@ -41,6 +41,10 @@ class FPS_API AFPSCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* CrouchAction;
 
+	/** Interact Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* InteractAction;
+
 public:
 	AFPSCharacter();
 
@@ -75,6 +79,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Crouch)
 	float CrouchSpeed;
+
+	/** Called for Interact input*/
+	void Interact();
+
+	UPROPERTY(EditAnywhere)
+	float InteractLineTraceLength = 350.f;
 
 public:
 	/** Look Input Action */

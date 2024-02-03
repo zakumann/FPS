@@ -10,13 +10,14 @@
 #include "Engine/LocalPlayer.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "FPS/Door/DoorActor.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(25.f, 96.0f);
 
 	// Create a CameraComponent	
 	FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
@@ -105,6 +106,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		// Crouch
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AFPSCharacter::StartCrouch);
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopCrouch);
+		// Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Interact);
 	}
 }
 
@@ -152,5 +155,20 @@ void AFPSCharacter::StartCrouch()
 void AFPSCharacter::StopCrouch()
 {
 	UnCrouch();
+}
+
+void AFPSCharacter::Interact()
+{
+	if(FirstPersonCameraComponent == nullptr) return;
+
+	FHitResult HitResult;
+	FVector Start = FirstPersonCameraComponent->GetComponentLocation();
+	FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * InteractLineTraceLength;
+	GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECollisionChannel::ECC_Visibility);
+
+	ADoorActor* Door = Cast<ADoorActor>(HitResult.GetActor());
+	if (Door) {
+		Door->OnInteract();
+	}
 }
 
