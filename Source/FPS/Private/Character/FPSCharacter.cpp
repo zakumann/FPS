@@ -2,6 +2,9 @@
 
 
 #include "Character/FPSCharacter.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h" 
+
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -16,6 +19,13 @@ void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMappingContext, 0);
+		}
+	}
 }
 
 // Called every frame
@@ -30,5 +40,30 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Move);
+
+		// Bind Jump Actions
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	}
 }
 
+void AFPSCharacter::Move(const FInputActionValue& Value)
+{
+	// 2D Vector of movement values returned from the input action
+	const FVector2D MovementValue = Value.Get<FVector2D>();
+
+	// Check if the controller possessing this Actor is valid
+	if (Controller)
+	{
+		// Add left and right movement
+		const FVector Right = GetActorRightVector();
+		AddMovementInput(Right, MovementValue.X);
+
+		// Add forward and back movement
+		const FVector Forward = GetActorForwardVector();
+		AddMovementInput(Forward, MovementValue.Y);
+	}
+}
