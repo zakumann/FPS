@@ -3,32 +3,79 @@
 
 #include "Combat/CombatComponent.h"
 
-// Sets default values for this component's properties
+
 UCombatComponent::UCombatComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
 }
 
 
-// Called when the game starts
-void UCombatComponent::BeginPlay()
-{
-	Super::BeginPlay();
 
-	// ...
-	
-}
-
-
-// Called every frame
 void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 
+void UCombatComponent::Initiate_CycleWeapon()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_CycleWeapon"),
+		false
+	);
+}
+void UCombatComponent::Initiate_StartFire()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_StartFire"),
+		false
+	);
+}
+void UCombatComponent::Initiate_StopFire()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_StopFire"),
+		false
+	);
+}
+void UCombatComponent::Initiate_Reload()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_Reload"),
+		false
+	);
+}
+void UCombatComponent::Initiate_StartAim()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_StartAim"),
+		false
+	);
+}
+void UCombatComponent::Initiate_StopAim()
+{
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		5.0f,
+		FColor::Cyan,
+		TEXT("Initiate_StopAim"),
+		false
+	);
+}

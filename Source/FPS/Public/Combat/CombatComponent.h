@@ -13,16 +13,21 @@ class FPS_API UCombatComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UCombatComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	// Cycle to the next weapon in the inventory
+	void Initiate_CycleWeapon();
+	void Initiate_StartFire();
+	void Initiate_StopFire();
+	void Initiate_Reload();
+	void Initiate_StartAim();
+	void Initiate_StopAim();
+
+protected:
+
+private:
+
 };

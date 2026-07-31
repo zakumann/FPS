@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Combat/CombatComponent.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -24,6 +25,9 @@ AFPSCharacter::AFPSCharacter()
 	Mesh1PComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh"));
 	Mesh1PComponent->SetupAttachment(CameraComponent);
 	Mesh1PComponent->CastShadow = false;
+
+	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
+
 }
 
 // Called when the game starts or when spawned
@@ -67,6 +71,13 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		// Bind Sprint Actions
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AFPSCharacter::StartSprint);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopSprint);
+
+		EnhancedInputComponent->BindAction(CycleWeaponAction, ETriggerEvent::Started, this, &ThisClass::CycleWeapon);
+		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Started, this, &ThisClass::StartFire);
+		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Completed, this, &ThisClass::StopFire);
+		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Started, this, &ThisClass::StartAim);
+		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Completed, this, &ThisClass::StopAim);
+		EnhancedInputComponent->BindAction(ReloadWeaponAction, ETriggerEvent::Started, this, &ThisClass::ReloadWeapon);
 	}
 }
 
@@ -108,4 +119,30 @@ void AFPSCharacter::StartSprint()
 void AFPSCharacter::StopSprint()
 {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+
+void AFPSCharacter::CycleWeapon()
+{
+	Combat->Initiate_CycleWeapon();
+}
+void AFPSCharacter::ReloadWeapon()
+{
+	Combat->Initiate_Reload();
+}
+void AFPSCharacter::StartFire()
+{
+	Combat->Initiate_StartFire();
+}
+void AFPSCharacter::StopFire()
+{
+	Combat->Initiate_StopFire();
+}
+void AFPSCharacter::StartAim()
+{
+	Combat->Initiate_StartAim();
+}
+void AFPSCharacter::StopAim()
+{
+	Combat->Initiate_StopAim();
 }

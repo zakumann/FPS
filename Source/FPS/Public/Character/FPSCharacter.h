@@ -13,6 +13,7 @@ class UInputAction;
 class UInputComponent;
 class UCameraComponent;
 class USkeletalMeshComponent;
+class UCombatComponent;
 
 UCLASS()
 class FPS_API AFPSCharacter : public ACharacter
@@ -48,6 +49,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|Input")
 	TObjectPtr<UInputAction> SprintAction;
 
+	// Cycle Weapon Input
+	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	TObjectPtr<UInputAction> CycleWeaponAction;
+
+	// Fire Weapon Input
+	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	TObjectPtr<UInputAction> FireWeaponAction;
+
+	// Reload Weapon Input
+	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	TObjectPtr<UInputAction> ReloadWeaponAction;
+
+	// Aim Weapon Input
+	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	TObjectPtr<UInputAction> AimWeaponAction;
+
+
 	// 1st Person mesh
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "1P Mesh")
 	TObjectPtr<USkeletalMeshComponent> Mesh1PComponent;
@@ -79,5 +97,16 @@ public:
 	void StartSprint();
 	void StopSprint();
 
+private:
 
+	void CycleWeapon();
+	void ReloadWeapon();
+	void StartFire();
+	void StopFire();
+
+	void StartAim();
+	void StopAim();
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UCombatComponent> Combat;
 };
