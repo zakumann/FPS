@@ -9,7 +9,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Combat/CombatComponent.h"
-
+#include "Data/WeaponData.h"
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
@@ -72,13 +72,19 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AFPSCharacter::StartSprint);
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopSprint);
 
-		EnhancedInputComponent->BindAction(CycleWeaponAction, ETriggerEvent::Started, this, &ThisClass::CycleWeapon);
-		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Started, this, &ThisClass::StartFire);
-		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Completed, this, &ThisClass::StopFire);
-		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Started, this, &ThisClass::StartAim);
-		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Completed, this, &ThisClass::StopAim);
-		EnhancedInputComponent->BindAction(ReloadWeaponAction, ETriggerEvent::Started, this, &ThisClass::ReloadWeapon);
+		EnhancedInputComponent->BindAction(CycleWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::CycleWeapon);
+		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::StartFire);
+		EnhancedInputComponent->BindAction(FireWeaponAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopFire);
+		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::StartAim);
+		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopAim);
+		EnhancedInputComponent->BindAction(ReloadWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::ReloadWeapon);
 	}
+}
+
+FName AFPSCharacter::GetWeaponAttachPoint_Implementation(const FGameplayTag& WeaponType) const
+{
+	checkf(Combat->WeaponData, TEXT("No Weapon Data Asset - Please fill out BP_FPSCharacter"));
+	return Combat->WeaponData->GripPoints.FindChecked(WeaponType);
 }
 
 void AFPSCharacter::Move(const FInputActionValue& Value)

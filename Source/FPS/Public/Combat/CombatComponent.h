@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
 
+class UWeaponData;
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FPS_API UCombatComponent : public UActorComponent
@@ -25,6 +27,9 @@ public:
 	void Initiate_Reload();
 	void Initiate_StartAim();
 	void Initiate_StopAim();
+
+	UPROPERTY(EditDefaultsOnly, Category = "FPS|Weapon")
+	TObjectPtr<UWeaponData> WeaponData;
 
 protected:
 
