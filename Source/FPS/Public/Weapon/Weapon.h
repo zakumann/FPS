@@ -11,11 +11,12 @@ UCLASS()
 class FPS_API AWeapon : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	AWeapon();
 
+public:
+	AWeapon();
 	USkeletalMeshComponent* GetMesh1P() const;
+
+	void AttachToOwningPawn() const;
 
 protected:
 	virtual void BeginPlay() override;
@@ -27,4 +28,6 @@ private:
 	// Weapon Mesh: 1st person view
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Mesh1P;
+
+	void SetMeshVisibilities(APawn* OwningPawn) const;
 };

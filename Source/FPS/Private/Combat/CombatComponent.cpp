@@ -2,6 +2,7 @@
 
 
 #include "Combat/CombatComponent.h"
+#include "Weapon/Weapon.h"
 
 
 UCombatComponent::UCombatComponent()
@@ -78,4 +79,31 @@ void UCombatComponent::Initiate_StopAim()
 		TEXT("Initiate_StopAim"),
 		false
 	);
+}
+
+void UCombatComponent::SpawnInventory()
+{
+	AWeapon* NewWeapon = SpawnWeapon(DefaultWeaponClass);
+	if (IsValid(NewWeapon))
+	{
+		NewWeapon->AttachToOwningPawn();
+	}
+}
+
+void UCombatComponent::DestroyInventory()
+{
+	// TODO: Destroy the inventory once we have one.
+}
+
+AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> WeaponClass) const
+{
+	AActor* OwningActor = GetOwner();
+	if (!IsValid(OwningActor)) return nullptr;
+	if (OwningActor->GetLocalRole() < ROLE_Authority) return nullptr;
+
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.Instigator = Cast<APawn>(OwningActor);
+	SpawnInfo.Owner = OwningActor;
+
+	return GetWorld()->SpawnActor<AWeapon>(WeaponClass, SpawnInfo);
 }

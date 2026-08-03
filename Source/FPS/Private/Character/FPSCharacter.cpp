@@ -25,9 +25,12 @@ AFPSCharacter::AFPSCharacter()
 	Mesh1PComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh"));
 	Mesh1PComponent->SetupAttachment(CameraComponent);
 	Mesh1PComponent->CastShadow = false;
+	Mesh1PComponent = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh1P");
+	Mesh1PComponent->SetOnlyOwnerSee(true);
+	Mesh1PComponent->bCastDynamicShadow = false;
+	Mesh1PComponent->CastShadow = false;
 
 	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
-
 }
 
 // Called when the game starts or when spawned
@@ -81,10 +84,24 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
+void AFPSCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	if (IsValid(Combat))
+	{
+		Combat->SpawnInventory();
+	}
+}
+
 FName AFPSCharacter::GetWeaponAttachPoint_Implementation(const FGameplayTag& WeaponType) const
 {
 	checkf(Combat->WeaponData, TEXT("No Weapon Data Asset - Please fill out BP_FPSCharacter"));
 	return Combat->WeaponData->GripPoints.FindChecked(WeaponType);
+}
+
+USkeletalMeshComponent* AFPSCharacter::GetMesh1P_Implementation() const
+{
+	return Mesh1PComponent;
 }
 
 void AFPSCharacter::Move(const FInputActionValue& Value)
