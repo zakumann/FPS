@@ -30,8 +30,6 @@ public:
 	TObjectPtr<UAnimBlueprint> FirstPersonDefaultAnim;
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|Input")
 	TObjectPtr<UInputMappingContext> InputMappingContext;
@@ -95,6 +93,9 @@ public:
 	virtual USkeletalMeshComponent* GetMesh1P_Implementation() const override;
 	/** ~PlayerInterface */
 
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);

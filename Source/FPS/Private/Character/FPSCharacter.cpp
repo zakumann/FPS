@@ -47,6 +47,16 @@ void AFPSCharacter::BeginPlay()
 	}
 }
 
+void AFPSCharacter::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	if (IsValid(Combat))
+	{
+		Combat->DestroyInventory();
+	}
+}
+
 // Called every frame
 void AFPSCharacter::Tick(float DeltaTime)
 {
