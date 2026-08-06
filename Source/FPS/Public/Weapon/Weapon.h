@@ -14,17 +14,19 @@ class FPS_API AWeapon : public AActor
 
 public:
 	AWeapon();
+
 	USkeletalMeshComponent* GetMesh1P() const;
 
 	void AttachToOwningPawn() const;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|WeaponType")
+	FGameplayTag WeaponType;
+
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "FPS|WeaponType")
-	FGameplayTag WeaponType;
-
 private:
+
 	// Weapon Mesh: 1st person view
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Mesh1P;

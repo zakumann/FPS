@@ -97,6 +97,11 @@ public:
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
 
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FPS|Combat")
+	TObjectPtr<UCombatComponent> Combat;
+
+public:
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
 
@@ -115,7 +120,4 @@ private:
 
 	void StartAim();
 	void StopAim();
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UCombatComponent> Combat;
 };

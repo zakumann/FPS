@@ -64,35 +64,24 @@ void UCombatComponent::Initiate_Reload()
 }
 void UCombatComponent::Initiate_StartAim()
 {
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		5.0f,
-		FColor::Cyan,
-		TEXT("Initiate_StartAim"),
-		false
-	);
+	bAiming = true;
 }
 void UCombatComponent::Initiate_StopAim()
 {
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		5.0f,
-		FColor::Cyan,
-		TEXT("Initiate_StopAim"),
-		false
-	);
+	bAiming = false;
 }
 
 void UCombatComponent::Equip(AWeapon* Weapon)
 {
 	CurrentWeapon = Weapon;
-	CurrentWeapon->AttachToOwningPawn();
+	if (IsValid(CurrentWeapon))
+	{
+		CurrentWeapon->AttachToOwningPawn();
+	}
 }
 
 void UCombatComponent::SpawnInventory()
 {
-	if (GetOwner()->GetLocalRole() < ROLE_Authority) return;
-
 	for (TSubclassOf<AWeapon> WeaponClass : DefaultWeaponClasses)
 	{
 		AWeapon* Weapon = SpawnWeapon(WeaponClass);
@@ -116,21 +105,15 @@ void UCombatComponent::DestroyInventory()
 	}
 }
 
-void UCombatComponent::OnRep_CurrentWeapon(AWeapon* LastWeapon)
-{
-	if (!IsValid(CurrentWeapon)) return;
-	CurrentWeapon->AttachToOwningPawn();
-}
-
 AWeapon* UCombatComponent::SpawnWeapon(TSubclassOf<AWeapon> WeaponClass) const
 {
 	AActor* OwningActor = GetOwner();
 	if (!IsValid(OwningActor)) return nullptr;
-	if (OwningActor->GetLocalRole() < ROLE_Authority) return nullptr;
 
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.Instigator = Cast<APawn>(OwningActor);
 	SpawnInfo.Owner = OwningActor;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	return GetWorld()->SpawnActor<AWeapon>(WeaponClass, SpawnInfo);
 }
