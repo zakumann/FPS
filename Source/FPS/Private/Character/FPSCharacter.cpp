@@ -31,12 +31,16 @@ AFPSCharacter::AFPSCharacter()
 	Mesh1PComponent->CastShadow = false;
 
 	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
+
+	DefaultFieldOfView = 90.0f;
 }
 
 // Called when the game starts or when spawned
 void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CameraComponent->SetFieldOfView(DefaultFieldOfView);
 
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -174,8 +178,10 @@ void AFPSCharacter::StopFire()
 void AFPSCharacter::StartAim()
 {
 	Combat->Initiate_StartAim();
+	OnAim(true);
 }
 void AFPSCharacter::StopAim()
 {
 	Combat->Initiate_StopAim();
+	OnAim(false);
 }

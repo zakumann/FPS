@@ -69,10 +69,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "1P Mesh")
 	TObjectPtr<USkeletalMeshComponent> Mesh1PComponent;
 
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
-	TObjectPtr<UCameraComponent> CameraComponent;
-
 	// Speed
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float WalkSpeed;
@@ -100,6 +96,16 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FPS|Combat")
 	TObjectPtr<UCombatComponent> Combat;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FPS|Camera")
+	TObjectPtr<UCameraComponent> CameraComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "FPS|Aiming")
+	float DefaultFieldOfView;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAim(bool bIsAiming);
 
 public:
 	UFUNCTION()
