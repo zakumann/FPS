@@ -49,19 +49,19 @@ protected:
 	TObjectPtr<UInputAction> SprintAction;
 
 	// Cycle Weapon Input
-	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	UPROPERTY(EditAnywhere, Category = "FPS|Input")
 	TObjectPtr<UInputAction> CycleWeaponAction;
 
 	// Fire Weapon Input
-	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	UPROPERTY(EditAnywhere, Category = "FPS|Input")
 	TObjectPtr<UInputAction> FireWeaponAction;
 
 	// Reload Weapon Input
-	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	UPROPERTY(EditAnywhere, Category = "FPS|Input")
 	TObjectPtr<UInputAction> ReloadWeaponAction;
 
 	// Aim Weapon Input
-	UPROPERTY(EDitAnywhere, Category = "FPS|Input")
+	UPROPERTY(EditAnywhere, Category = "FPS|Input")
 	TObjectPtr<UInputAction> AimWeaponAction;
 
 
@@ -92,6 +92,9 @@ public:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void BeginDestroy() override;
+
+	UFUNCTION(BlueprintCallable)
+	bool HasCurrentWeapon() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "FPS|Combat")

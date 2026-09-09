@@ -74,10 +74,7 @@ void UCombatComponent::Initiate_StopAim()
 void UCombatComponent::Equip(AWeapon* Weapon)
 {
 	CurrentWeapon = Weapon;
-	if (IsValid(CurrentWeapon))
-	{
-		CurrentWeapon->AttachToOwningPawn();
-	}
+	CurrentWeapon->AttachToOwningPawn();
 }
 
 void UCombatComponent::SpawnInventory()

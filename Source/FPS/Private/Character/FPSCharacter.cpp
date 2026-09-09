@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Combat/CombatComponent.h"
 #include "Data/WeaponData.h"
+
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
@@ -59,6 +60,11 @@ void AFPSCharacter::BeginDestroy()
 	{
 		Combat->DestroyInventory();
 	}
+}
+
+bool AFPSCharacter::HasCurrentWeapon() const
+{
+	return IsValid(Combat) && Combat->CurrentWeapon != nullptr;
 }
 
 // Called every frame

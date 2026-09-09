@@ -39,9 +39,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	bool bAiming;
 
-protected:
 	UPROPERTY(Transient, BlueprintReadOnly)
 	TObjectPtr<AWeapon> CurrentWeapon;
+
+/*protected:*/
 
 private:
 	UPROPERTY(Transient)
