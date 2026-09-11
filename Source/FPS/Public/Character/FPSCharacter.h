@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Interfaces/PlayerInterface.h"
+#include "ShooterTypes/ShooterTypes.h"
 #include "FPSCharacter.generated.h"
 
 class UAnimBlueprint;
@@ -29,8 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = Animation)
 	TObjectPtr<UAnimBlueprint> FirstPersonDefaultAnim;
 
-protected:
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|Input")
 	TObjectPtr<UInputMappingContext> InputMappingContext;
 
@@ -47,6 +46,9 @@ protected:
 	// Sprint Input
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|Input")
 	TObjectPtr<UInputAction> SprintAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "FPS|Input")
+	TObjectPtr<UInputAction> CrouchAction;
 
 	// Cycle Weapon Input
 	UPROPERTY(EditAnywhere, Category = "FPS|Input")
@@ -75,6 +77,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float RunSpeed;
+protected:
 
 public:	
 	// Called every frame
@@ -110,6 +113,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnAim(bool bIsAiming);
 
+	UPROPERTY(BlueprintReadOnly, Category = "FPS|TurnInPlace")
+	ETurningInPlace TurningStatus;
+
 public:
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
@@ -120,6 +126,8 @@ public:
 	void StartSprint();
 	void StopSprint();
 
+	void Crouch();
+	void Jump();
 private:
 
 	void CycleWeapon();

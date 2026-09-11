@@ -3,11 +3,12 @@
 
 #include "Character/FPSCharacter.h"
 #include "Camera/CameraComponent.h"
-#include "GameFramework/Character.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "Combat/CombatComponent.h"
 #include "Data/WeaponData.h"
 
@@ -16,6 +17,8 @@ AFPSCharacter::AFPSCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	CameraComponent->SetupAttachment(RootComponent);
@@ -34,6 +37,7 @@ AFPSCharacter::AFPSCharacter()
 	Combat = CreateDefaultSubobject<UCombatComponent>("Combat");
 
 	DefaultFieldOfView = 90.0f;
+	TurningStatus = ETurningInPlace::NotTurning;
 }
 
 // Called when the game starts or when spawned
@@ -88,8 +92,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFPSCharacter::Look);
 
 		// Bind Jump Actions
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &AFPSCharacter::Jump);
 
 		// Bind Sprint Actions
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &AFPSCharacter::StartSprint);
@@ -101,6 +104,9 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::StartAim);
 		EnhancedInputComponent->BindAction(AimWeaponAction, ETriggerEvent::Completed, this, &AFPSCharacter::StopAim);
 		EnhancedInputComponent->BindAction(ReloadWeaponAction, ETriggerEvent::Started, this, &AFPSCharacter::ReloadWeapon);
+
+		// Bind Crouch Actions
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Started, this, &AFPSCharacter::Crouch);
 	}
 }
 
@@ -153,6 +159,30 @@ void AFPSCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisValue.Y);
 	}
 }
+
+void AFPSCharacter::Crouch()
+{
+	if (UCharacterMovementComponent* CMC = GetCharacterMovement(); IsValid(CMC))
+	{
+		CMC->bWantsToCrouch = !CMC->bWantsToCrouch;
+	}
+}
+
+void AFPSCharacter::Jump()
+{
+	UCharacterMovementComponent* CMC = GetCharacterMovement();
+	if (!IsValid(CMC)) return;
+
+	if (CMC->bWantsToCrouch)
+	{
+		CMC->bWantsToCrouch = false;
+	}
+	else
+	{
+		Super::Jump();
+	}
+}
+
 
 void AFPSCharacter::StartSprint()
 {
